@@ -6,9 +6,6 @@ dotenv.config({
 })
 
 
-app.get('/', (req, res) => {
-    res.json({'message':"api is working"})
-  })
 
 
 app.listen(process.env.PORT || 8000, () => {
