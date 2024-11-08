@@ -40,8 +40,8 @@ app.get("/", (req, res) => {
 app.use("/api/v1/users", userRouter)
 app.use("/api/v1/cashmemo",invoiceRouter )
 app.use("/api/v1/products",prouductRouter)
-app.use("/api/v1/shop",shopRouter)
-app.use("/api/v1/stock",stockRouter)
+app.use("/api/v1/shops",shopRouter)
+app.use("/api/v1/stocks",stockRouter)
 
 
 export { app };

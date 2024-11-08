@@ -14,9 +14,9 @@ router.route("/")
     .post(verifyJWT, createInvoice)  // Create a new invoice
 
 router.route("/:id")
-    .get(verifyJWT, getInvoiceById)  // Get specific invoice by ID
-    .patch(verifyJWT, updateInvoice) // Update invoice by ID
-    .delete(verifyJWT, deleteInvoice); // Delete invoice by ID
+    .get(verifyJWT, getInvoiceById)  
+    .patch(verifyJWT, updateInvoice) 
+    .delete(verifyJWT, deleteInvoice); 
 
 
 

@@ -21,9 +21,9 @@ router.route("/").get((req, res) => {
 });
 
 
-router.post("/create", verifyJWT, upload.single('avatar'), createShop); // Create shop
+router.post("/create", verifyJWT,  createShop); // Create shop
 router.get("/:shopId", getShopDetails); // Get shop details
-router.put("/:shopId", verifyJWT, upload.single('avatar'), updateShop); // Update shop
+router.put("/:shopId", verifyJWT, updateShop); // Update shop
 router.delete("/:shopId", verifyJWT, deleteShop); // Delete shop
 
 export default router;

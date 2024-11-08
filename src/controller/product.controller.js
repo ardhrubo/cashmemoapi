@@ -9,6 +9,7 @@ const createProduct = async (req, res) => {
 
         // Find the shop by name
         const shop = await Shop.findOne({ name: shopName });
+        console.log(shop)
         if (!shop) {
             return res.status(404).json({ message: 'Shop not found' });
         }
