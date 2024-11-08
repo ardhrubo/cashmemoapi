@@ -8,10 +8,16 @@ const createProduct = async (req, res) => {
         const { name, price, stock, category, shopName, boughtFrom, supplierId } = req.body;
 
         // Find the shop by name
-        const shop = await Shop.findOne({ name: shopName });
-        console.log(shop)
+        const shop = await Shop.findOne({ shopName });
+    
         if (!shop) {
             return res.status(404).json({ message: 'Shop not found' });
+        }
+
+        const restockerId = req.user._id; 
+
+        if(!restockerId){
+            return res.status(404).json({message:"Restock failed"})
         }
 
         // Create the product
@@ -32,10 +38,10 @@ const createProduct = async (req, res) => {
             shop: shop._id,
             supplier: supplierId, // Ensure supplierId is provided in the request body
             quantity: stock,
+            restocker:restockerId,
             history: [{
                 type: 'purchase',
                 quantity: stock,
-                remarks: 'Initial stock'
             }]
         });
 

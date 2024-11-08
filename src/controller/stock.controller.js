@@ -6,22 +6,23 @@ import { Stock } from "../models/stock.model.js";
 // Create or Restock Product (Only Suppliers and Wholesalers)
 const restockProduct = async (req, res) => {
     try {
-        const { productName, quantity, remarks } = req.body;
-        const restockerId = req.user._id; // Assuming user info is available from JWT
-
-        // Check if the user is a supplier or wholesaler
+        const { productName, quantity} = req.body;
+        
+        const restockerId = req.user._id; 
         const restocker = await User.findById(restockerId);
+
+
         if (!restocker || (restocker.role !== "supplier" && restocker.role !== "wholesaler")) {
             return res.status(403).json({ message: "Only suppliers and wholesalers can restock products." });
         }
 
-        // Find the shop associated with the user
+        
         const shop = await Shop.findOne({ owner: restockerId });
         if (!shop) {
             return res.status(404).json({ message: "Shop not found for the user." });
         }
 
-        // Find the product by name within the user's shop
+        
         const product = await Product.findOne({ name: productName, shop: shop._id });
         if (!product) {
             return res.status(404).json({ message: "Product not found in the user's shop." });
@@ -32,14 +33,14 @@ const restockProduct = async (req, res) => {
 
         if (stock) {
             stock.quantity += quantity;
-            stock.history.push({ type: "restock", quantity, remarks, date: new Date() });
+            stock.history.push({ type: "restock", quantity, date: new Date() });
         } else {
             stock = new Stock({
                 product: product._id,
                 shop: shop._id,
                 restocker: restockerId,
                 quantity,
-                history: [{ type: "restock", quantity, remarks, date: new Date() }],
+                history: [{ type: "restock", quantity, date: new Date() }],
             });
         }
 

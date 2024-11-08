@@ -1,49 +1,72 @@
-import { Invoice } from "../models/invoice.model.js";
+import { Product } from "../models/product.model.js";
+import { Shop } from "../models/shop.model.js";
+import { User } from "../models/user.model.js";
 import { Stock } from "../models/stock.model.js";
 import {asyncHandler} from "../utils/asyncHandler.js";
+import { Invoice } from "../models/invoice.model.js";
 
 // Create an Invoice (Buy or Sell Product)
 const createInvoice = async (req, res) => {
     try {
-        const { seller, shop, products, buyerDetails, paymentMethod, notes } = req.body;
+        const { products, buyerDetails, paymentMethod, notes,shop,seller,totalAmount } = req.body;
 
-        let totalAmount = 0;
+        // let totalAmount = 0;
 
-        // Process each product to calculate total and update stock
-        for (const item of products) {
-            const { product, quantity, price } = item;
-            totalAmount += quantity * price;
+        // const restockerId = req.user._id; 
+        // const restocker = await User.findById(restockerId);
+        
+        // if (!restocker || (restocker.role !== "supplier" && restocker.role !== "wholesaler")) {
+        //     return res.status(403).json({ message: "Only suppliers and wholesalers can restock products." });
+        // }
 
-            const stock = await Stock.findOne({ product, shop });
+        
+        // const shop = await Shop.findOne({ owner: restockerId });
+    
+        // // Process each product to calculate total and update stock
+        // for (const item in products) {
+        //     const { name, quantity, price } = item;
+        //     totalAmount += quantity * price;
 
-            if (!stock) {
-                if (req.user.role === "supplier") {
-                    // Create stock entry when supplier buys from farmer
-                    await Stock.create({
-                        product,
-                        shop,
-                        quantity,
-                        history: [{ type: "purchase", quantity, remarks: "Initial stock from farmer" }],
-                    });
-                } else {
-                    return res.status(400).json({ message: "Stock not available for this product." });
-                }
-            } else {
-                if (req.user.role === "wholesaler") {
-                    // Decrease stock when selling to retailer
-                    if (stock.quantity < quantity) {
-                        return res.status(400).json({ message: `Insufficient stock for product: ${product}` });
-                    }
-                    stock.quantity -= quantity;
-                    stock.history.push({ type: "sale", quantity, remarks: "Sold to retailer" });
-                } else if (req.user.role === "supplier") {
-                    // Increase stock when buying from farmer
-                    stock.quantity += quantity;
-                    stock.history.push({ type: "purchase", quantity, remarks: "Purchased from farmer" });
-                }
-                await stock.save();
-            }
-        }
+        //     const stock = await Stock.findOne({product:name});
+            
+
+        //     if (!stock) {
+        //         if (req.user.role === "supplier") {
+        //     // Create stock entry when supplier buys from farmer
+                     
+        //      const product = await Product.findOne(name);
+
+        //      console.log(name)
+
+        //      if (!product) {
+        //      return res.status(404).json({ message: "Product not found in the user's shop." });
+        //      }
+        //             await Stock.create({
+        //                 product: product._id,
+        //                 shop: shop._id,
+        //                 restocker: restockerId,
+        //                 quantity,
+        //                 history: [{ type: "restock", quantity, date: new Date() }],
+        //             });
+        //         } else {
+        //             return res.status(400).json({ message: "Stock not available for this product." });
+        //         }
+        //     } else {
+        //         if (req.user.role === "wholesaler") {
+        //             // Decrease stock when selling to retailer
+        //             if (stock.quantity < quantity) {
+        //                 return res.status(400).json({ message: `Insufficient stock for product: ${name}` });
+        //             }
+        //             stock.quantity -= quantity;
+        //             stock.history.push({ type: "sale", quantity });
+        //         } else if (req.user.role === "supplier") {
+        //             // Increase stock when buying from farmer
+        //             stock.quantity += quantity;
+        //             stock.history.push({ type: "purchase", quantity });
+        //         }
+        //         await stock.save();
+        //     }
+        // }
 
         // Create the invoice with all details
         const invoice = new Invoice({
@@ -64,8 +87,8 @@ const createInvoice = async (req, res) => {
     }
 };
 
-// Get Invoice Details
-const getInvoiceDetails = async (req, res) => {
+// Get all invoice Details
+const getAllInvoice = async (req, res) => {
     try {
         const { invoiceId } = req.params;
         const invoice = await Invoice.findById(invoiceId)
@@ -136,5 +159,6 @@ export {
     getInvoiceById,
     updateInvoice,
     deleteInvoice,
+    getAllInvoice
 }
 

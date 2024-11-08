@@ -3,38 +3,34 @@ const { Schema, model } = mongoose;
 
 const invoiceSchema = new Schema(
     {
-        invoiceNumber: {
-            type: String,
-            required: true,
-            unique: true,
-            trim: true,
-        },
+        
         buyerDetails: {
             name: { type: String, required: true, trim: true },
             phone: { type: String, required: true, trim: true },
             email: { type: String, trim: true, lowercase: true },
-            address: { type: String, required: true, trim: true },
+            address: { type: String, trim: true },
         },
         seller: {
-            type: Schema.Types.ObjectId,
-            ref: "User", // Refers to wholesaler or supplier
-            required: true,
+            // type: Schema.Types.ObjectId,
+            // ref: "User", // Refers to wholesaler or supplier
+            // required: true,
+            type:String
         },
         shop: {
             type: Schema.Types.ObjectId,
             ref: "Shop", // Refers to the seller's shop
-            required: true,
+            // required: true,
         },
         products: [
             {
                 product: {
-                    type: Schema.Types.ObjectId,
-                    ref: "Product", // Refers to purchased product
-                    required: true,
+                    type: String,
+                    // ref: "Product", // Refers to purchased product
+                    // required: true,
                 },
                 quantity: { type: Number, required: true, min: 1 },
                 price: { type: Number, required: true },
-                total: { type: Number, required: true }, // quantity * price
+                total: { type: Number }, // quantity * price
             },
         ],
         totalAmount: {

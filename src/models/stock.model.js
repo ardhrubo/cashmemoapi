@@ -37,7 +37,6 @@ const stockSchema = new Schema(
                     type: Number,
                     required: true,
                 },
-                remarks: String,
                 date: {
                     type: Date,
                     default: Date.now,

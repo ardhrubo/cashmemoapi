@@ -4,13 +4,14 @@ import {
     getInvoiceById,
     updateInvoice,
     deleteInvoice,
+    getAllInvoice
 } from "../controller/invoice.controller.js";
 import { verifyJWT } from "../middleware/auth.middlewares.js";
 
 const router = Router();
 
 // Secured Routes for Invoice Management
-router.route("/")
+router.route("/create")
     .post(verifyJWT, createInvoice)  // Create a new invoice
 
 router.route("/:id")
